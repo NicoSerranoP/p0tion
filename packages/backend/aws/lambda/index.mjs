@@ -1,8 +1,11 @@
 import { EC2Client, DescribeInstancesCommand, StopInstancesCommand, CreateTagsCommand } from "@aws-sdk/client-ec2"
+import dotenv from "dotenv"
 
-const ec2 = new EC2Client({ region: "us-east-1" })
+dotenv.config()
 
-export const handler = async (event) => {
+const ec2 = new EC2Client({ region: process.env.TF_VAR_AWS_REGION })
+
+const handler = async (event) => {
     console.log("Received event:", JSON.stringify(event, null, 2))
 
     // Extract the SNS message which will be the instanceId
@@ -48,3 +51,5 @@ export const handler = async (event) => {
         console.log("Error", err)
     }
 }
+
+export default handler

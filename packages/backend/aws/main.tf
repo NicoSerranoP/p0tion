@@ -1,5 +1,13 @@
+variable "TF_VAR_AWS_ACCESS_KEY_ID" {
+    description = "Remember user needs admin privileges IAMFullAccess & AmazonSNSFullAccess & AWSLambda_FullAccess"
+}
+variable "TF_VAR_AWS_SECRET_ACCESS_KEY" {}
+variable "TF_VAR_AWS_REGION" {}
+
 provider "aws" {
-    region = "us-east-1"
+    access_key = var.TF_VAR_AWS_ACCESS_KEY_ID
+    secret_key = var.TF_VAR_AWS_SECRET_ACCESS_KEY
+    region = var.TF_VAR_AWS_REGION
 }
 
 # create SNS
@@ -88,7 +96,7 @@ resource "aws_sns_topic_subscription" "lambda" {
 data "aws_iam_policy_document" "p0tion_assume_role_policy_ec2" {
     statement {
         actions = ["sts:AssumeRole"]
-    
+
         principals {
             type        = "Service"
             identifiers = ["ec2.amazonaws.com"]
@@ -110,7 +118,7 @@ resource "aws_iam_instance_profile" "p0tion_ec2_instance_profile" {
 # EC2 SNS policy
 resource "aws_iam_role_policy" "p0tion_ec2_sns" {
     name = "p0tion_ec2_sns"
-    role = aws_iam_role.p0tion_ec2_role.id 
+    role = aws_iam_role.p0tion_ec2_role.id
 
     policy = <<EOF
 {
@@ -130,7 +138,7 @@ resource "aws_iam_role_policy" "p0tion_ec2_sns" {
 # EC2 S3 and SSM policy
 resource "aws_iam_role_policy" "p0tion_ec2_s3_ssm" {
     name = "p0tion_ec2_s3_ssm"
-    role = aws_iam_role.p0tion_ec2_role.id 
+    role = aws_iam_role.p0tion_ec2_role.id
 
     policy = <<EOF
 {
@@ -157,7 +165,7 @@ resource "aws_iam_role_policy" "p0tion_ec2_s3_ssm" {
     EOF
 }
 
-# IAM user for all operations 
+# IAM user for all operations
 resource "aws_iam_user" "p0tion_iam_user" {
     name = "p0tion_iam_user"
 }
